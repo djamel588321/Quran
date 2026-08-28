@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رحلتي اليومية</title>
+<style>
+  :root {
+    --teal: #0F3D3E;
+    --teal-dark: #0A2C2D;
+    --gold: #C9A24B;
+    --cream: #FBF8F2;
+    --card: #FFFFFF;
+    --text: #1C2B2B;
+    --muted: #7C8C8C;
+    --good: #2F855A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    padding-bottom: 40px;
+  }
+  header {
+    background: var(--teal);
+    color: white;
+    padding: 22px 20px 26px;
+    border-radius: 0 0 24px 24px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 4px; font-size: 22px; }
+  header p { margin: 0; color: #CBD9D8; font-size: 13px; }
+  .streak-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.12);
+    color: var(--gold);
+    font-weight: bold; font-size: 13px;
+    padding: 6px 14px; border-radius: 999px; margin-top: 10px;
+  }
+  .container { max-width: 520px; margin: -14px auto 0; padding: 0 16px; }
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 10px rgba(15,61,62,0.08);
+  }
+  .task-card { display: flex; flex-direction: column; gap: 10px; }
+  .task-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .task-title { font-weight: bold; font-size: 15px; }
+  .task-time { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .task-desc { font-size: 13px; color: #4A5A5A; line-height: 1.6; }
+  .check-btn {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 999px;
+    border: 2px solid var(--gold); background: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--gold);
+  }
+  .check-btn.done { background: var(--good); border-color: var(--good); color: white; }
+  .time-input {
+    border: 1px solid #E3E7E7; border-radius: 8px; padding: 6px 8px; font-size: 13px;
+    font-family: inherit; color: var(--text); background: #FAFCFC;
+  }
+  .istighfar-box { text-align: center; padding: 6px 0; }
+  .istighfar-count { font-size: 34px; font-weight: bold; color: var(--teal); }
+  .istighfar-bar { height: 8px; background: #EEE; border-radius: 999px; overflow: hidden; margin: 8px 0; }
+  .istighfar-fill { height: 100%; background: var(--gold); transition: width .2s; }
+  .tap-btn {
+    background: var(--teal); color: white; border: none; border-radius: 12px;
+    padding: 12px 20px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%;
+  }
+  .tap-btn:active { background: var(--teal-dark); }
+  .section-title { font-weight: bold; font-size: 16px; margin: 22px 0 10px 2px; color: var(--teal); }
+  .subhead { font-weight: bold; font-size: 13.5px; color: var(--teal); margin: 14px 0 4px; display: flex; align-items: center; justify-content: space-between; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .pill-btn {
+    background: #F1EFE6; color: var(--teal); border: none; border-radius: 999px;
+    padding: 8px 14px; font-size: 12.5px; font-weight: bold; cursor: pointer;
+  }
+  .pill-btn.primary { background: var(--gold); color: var(--teal-dark); }
+  .pill-btn.small { padding: 5px 10px; font-size: 11px; }
+  textarea, .prompt-box {
+    width: 100%; border: 1px solid #E3E7E7; border-radius: 10px; padding: 10px;
+    font-family: inherit; font-size: 13px; color: var(--text); background: #FAFCFC; resize: vertical;
+  }
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--teal-dark); color: white; padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; max-width: 85%; text-align: center;
+  }
+  .toast.show { opacity: 1; }
+  .info-note { font-size: 12px; color: var(--muted); line-height: 1.7; margin-top: 6px; }
+  .quran-text { font-size: 19px; line-height: 2.1; text-align: center; color: var(--teal-dark); padding: 10px 4px; font-family: 'Traditional Arabic', 'Scheherazade New', serif; }
+  .ayah-ref { text-align: center; font-size: 12px; color: var(--gold); font-weight: bold; margin-top: 4px; }
+  .reflect-box { background: #F7F5EC; border-radius: 10px; padding: 10px; font-size: 13px; line-height: 1.7; color: #3D4A4A; margin-top: 8px; }
+  .history-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #F0EEE5; font-size: 12.5px; }
+  .history-row:last-child { border-bottom: none; }
+  .history-date { color: var(--teal); font-weight: bold; }
+  .history-detail { color: var(--muted); }
+  .read-mark { color: var(--good); font-weight: bold; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌙 رحلتي اليومية</h1>
+  <p id="todayDate"></p>
+  <div class="streak-badge">🔥 <span id="streakCount">0</span> يوم متواصل</div>
+</header>
+
+<div class="container">
+
+  <div class="card" id="notifyCard">
+    <div class="task-top">
+      <div>
+        <div class="task-title">🔔 التذكيرات</div>
+        <div class="task-desc" id="notifyStatus">اضغط للسماح بالتذكيرات في وقتها.</div>
+      </div>
+      <button class="pill-btn primary" onclick="enableNotifications()">تفعيل</button>
+    </div>
+    <button class="pill-btn small" onclick="testAlert()">🔊 تجربة الصوت والاهتزاز الآن</button>
+    <div class="info-note" id="notifyHostWarning"></div>
+  </div>
+
+  <div class="section-title">جدول اليوم</div>
+
+  <div class="card task-card" data-task="t1">
+    <div class="task-top">
+      <div>
+        <div class="task-title">🌙 الخلوة والمناجاة</div>
+        <div class="task-time">الاستيقاظ، الوضوء، ركعتان، والاستغفار</div>
+      </div>
+      <button class="check-btn" onclick="toggleTask('t1')">✓</button>
+    </div>
+    <input type="time" class="time-input" id="time_t1" value="05:30" onchange="saveTimes()">
+    <div class="istighfar-box">
+      <div class="istighfar-count"><span id="istighfarCount">0</span> / 100</div>
+      <div class="istighfar-bar"><div class="istighfar-fill" id="istighfarFill" style="width:0%"></div></div>
+      <button class="tap-btn" onclick="tapIstighfar()">أستغفر الله العظيم وأتوب إليه</button>
+    </div>
+    <div class="reflect-box" id="istighfarReflection"></div>
+  </div>
+
+  <div class="card task-card" data-task="t2">
+    <div class="task-top">
+      <div>
+        <div class="task-title">🕌 بداية اليوم</div>
+        <div class="task-desc">أداء صلاة الفجر، وبداية يومك بصفحة جديدة.</div>
+      </div>
+      <button class="check-btn" onclick="toggleTask('t2')">✓</button>
+    </div>
+    <input type="time" class="time-input" id="time_t2" value="05:50" onchange="saveTimes()">
+    <div class="info-note">عدّل هذا الوقت بين الحين والآخر ليطابق وقت أذان الفجر في مكانك، لأنه يتغير خلال السنة.</div>
+  </div>
+
+  <div class="card task-card" data-task="t3">
+    <div class="task-top">
+      <div>
+        <div class="task-title">☀️ التطبيق العملي للندم</div>
+        <div class="task-desc" id="spouseTaskText">معاملة الزوجة بلطف وابتسامة، وتقديم أي مساعدة لها — وإخراج صدقة بسيطة اليوم.</div>
+      </div>
+      <button class="check-btn" onclick="toggleTask('t3')">✓</button>
+    </div>
+    <input type="time" class="time-input" id="time_t3" value="13:00" onchange="saveTimes()">
+    <div class="reflect-box" id="spouseTaskReflection"></div>
+    <button class="pill-btn small" onclick="cycleSpouseTask()">🔄 مهمة أخرى</button>
+  </div>
+
+  <div class="card task-card" data-task="t4">
+    <div class="task-top">
+      <div>
+        <div class="task-title">📖 غذاء الروح</div>
+        <div class="task-desc">قراءة صفحتين من القرآن الكريم (أو الاستماع إليه) — تأخذ 5 دقائق فقط.</div>
+      </div>
+      <button class="check-btn" onclick="toggleTask('t4')">✓</button>
+    </div>
+    <input type="time" class="time-input" id="time_t4" value="20:00" onchange="saveTimes()">
+  </div>
+
+  <div class="section-title">خطتك التفصيلية اليوم</div>
+
+  <div class="card">
+    <div class="subhead"><span>📿 الركن الروحي</span></div>
+    <div class="reflect-box" id="spiritualReflection"></div>
+  </div>
+
+  <div class="card">
+    <div class="subhead">
+      <span>📖 الورد القرآني اليوم</span>
+      <button class="pill-btn small" onclick="loadQuranPassage(true)">🔄 مقطع آخر</button>
+    </div>
+    <div id="quranStatus" class="info-note">جارِ التحميل...</div>
+    <div class="quran-text" id="quranText"></div>
+    <div class="ayah-ref" id="quranRef"></div>
+    <div class="reflect-box" id="quranReflection"></div>
+    <div class="btn-row">
+      <button class="pill-btn primary" onclick="markQuranRead()" id="quranReadBtn">✓ قرأت هذا المقطع اليوم</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="subhead">
+      <span>🤍 عمل السر الصالح</span>
+      <button class="pill-btn small" onclick="cycleGoodDeed()">🔄 اقتراح آخر</button>
+    </div>
+    <div class="reflect-box" id="goodDeedText"></div>
+  </div>
+
+  <div class="card">
+    <div class="info-note" style="margin-bottom:6px;">ملاحظاتك الخاصة على خطة اليوم (تُحفظ على هذا الجهاز فقط):</div>
+    <textarea id="journal" rows="4" placeholder="اكتب هنا..." onchange="saveJournal()"></textarea>
+  </div>
+
+  <div class="section-title">سجل الأيام السابقة</div>
+  <div class="card" id="historyCard">
+    <div class="info-note">لا يوجد سجل بعد — سيبدأ الحفظ التلقائي عند منتصف الليل الأول.</div>
+  </div>
+
+  <div class="section-title">عن هذا التطبيق</div>
+  <div class="card info-note">
+    كل بياناتك تُحفظ على جهازك فقط. خطتك اليومية (الاستغفار، القرآن، العمل الصالح، مهمة الزوج) مبنية بالكامل داخل الكود ولا تحتاج أي تطبيق ذكاء اصطناعي خارجي — فقط الآيات القرآنية تُجلب من قاعدة بيانات قرآنية موثوقة عند توفر الإنترنت لضمان دقتها، وإن لم يتوفر إنترنت يستخدم التطبيق مجموعة سور قصيرة محفوظة مسبقًا.<br><br>
+    <strong>⚠️ لماذا لا تعمل التذكيرات الآن:</strong> أنت تفتح هذا الملف مباشرة من التنزيلات (content://) — والمتصفحات تمنع التذكيرات من الملفات المحلية لأسباب أمنية. لتفعيلها فعليًا:<br><br>
+    <strong>الأسهل:</strong> ارفع هذا الملف على استضافة مجانية (مثل Netlify)، وافتحه من رابط https حقيقي — عندها ستعمل التذكيرات (صوت، اهتزاز، وإشعار) بشكل طبيعي طالما الصفحة مفتوحة.<br><br>
+    <strong>الأقوى (تذكيرات تعمل حتى والتطبيق مغلق تمامًا، أو عبر البريد الإلكتروني):</strong> استخدم <strong>pwabuilder.com</strong> لتحويل الرابط المستضاف إلى APK، أو استخدم ملف دالة البريد الإلكتروني المرفق (Netlify Function) لإرسال تذكير يومي إلى بريدك djamel588321@gmail.com حتى لو كان هاتفك مغلقًا.
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- BUILT-IN DAILY PLAN CONTENT (no external AI needed) ----------
+const ISTIGHFAR_REFLECTIONS = [
+  'الاستغفار المستمر يغسل القلب ويخفف ثقل تأنيب الضمير. كل مرة تقولها بصدق، هي خطوة نحو طمأنينة أكبر — لا تستهن بها مهما تكررت.',
+  'قال الله تعالى في محكم كتابه: "الحسنات يذهبن السيئات" — استمرارك اليوم في هذا الورد هو عمل صالح حقيقي يمحو أثر الماضي.',
+  'الاستغفار ليس مجرد كلمات تُقال، بل حالة قلب تتجه نحو الله بصدق. حاول أن تستحضر معناها وأنت تُرددها، لا أن تكون عادة لسانية فقط.',
+  'كل صباح جديد هو فرصة جديدة. الاستغفار اليوم يبني عليه اليوم القادم، وهكذا تتكوّن رحلة تعافٍ حقيقية خطوة بخطوة.',
+  'الندم الصادق مقرون بالاستغفار من أعظم أسباب راحة القلب. لا تتعجل النتيجة — الطمأنينة تأتي بالاستمرار لا بالكمال.',
+  'اجعل استغفارك اليوم مصحوبًا بحضور القلب: فكّر في سعة رحمة الله، لا في حجم الخطأ. الرحمة أوسع بكثير مما تتخيل.',
+  'الاستمرار على الاستغفار، ولو بقدر بسيط كل يوم، أحب إلى الله من عمل كثير منقطع. لا تُثقل على نفسك، فقط داوم.'
+];
+
+const GOOD_DEED_POOL = [
+  { title: 'صدقة سر بسيطة', text: 'تصدّق اليوم بمبلغ بسيط جدًا (ولو إلكترونيًا) لمحتاج أو يتيم، بنية خالصة لا يعلم بها أحد سواك وسوى الله. صدقة السر تطفئ غضب الرب وتمحو أثر الذنب.' },
+  { title: 'مساعدة غير مباشرة', text: 'ابحث اليوم عن شخص يحتاج مساعدة صغيرة (توصيل، نصيحة، وقت) وقدّمها له دون أن تخبر أحدًا أنك فعلت ذلك. الإخلاص في الخفاء له أثر مضاعف على تزكية النفس.' },
+  { title: 'تفريج كربة', text: 'اتصل أو تواصل مع شخص تعرف أنه يمر بضيق (مادي أو نفسي) وحاول أن تخفف عنه، ولو بكلمة طيبة أو دعم بسيط، دون منّة أو إظهار.' },
+  { title: 'دعاء بظهر الغيب', text: 'ادعُ اليوم لشخص لا يعلم أنك تدعو له، بخير أو بشفاء أو بتوفيق. الدعاء بظهر الغيب مستجاب، وهو عمل قلبي خالص لا يراه أحد.' },
+  { title: 'كلمة طيبة لمن لا يتوقعها', text: 'اختر شخصًا في حياتك (زميل، جار، قريب) وقل له كلمة تقدير أو تشجيع صادقة اليوم، بلا سبب ظاهر، فقط لإدخال السرور على قلبه.' },
+  { title: 'صلة رحم منسية', text: 'تواصل اليوم مع قريب لم تتحدث معه منذ فترة، بلا مناسبة، فقط للسؤال عنه. صلة الرحم من أعظم أبواب البركة ومحو الذنوب.' },
+  { title: 'إماطة أذى', text: 'أزل اليوم أذى بسيطًا عن طريق الناس (حرفيًا أو مجازيًا) — قد يكون هذا أبسط عمل لكنه من أعمال الإيمان التي وصفها النبي ﷺ.' }
+];
+
+const SPOUSE_TASK_POOL = [
+  { title: 'كلمة تقدير صادقة', text: 'قل لزوجتك اليوم بشكل مباشر ومحدد شيئًا تقدّره فيها (وليس مجاملة عامة) — مثل جهدها في أمر معين لاحظته. التحديد يجعل الكلمة تصل للقلب أكثر.', reflect: 'التقدير المحدد (لا العام) يشعر الطرف الآخر بأنه مرئي فعلًا، لا فقط مجاملًا.' },
+  { title: 'وقت خالص بلا هاتف', text: 'خصص 20 دقيقة اليوم للجلوس معها دون هاتف أو مشتتات، فقط استماع حقيقي لما تريد أن تشاركه. الحضور الكامل أثمن من أي هدية.', reflect: 'الانتباه الكامل رسالة حب أعمق من الكلام نفسه.' },
+  { title: 'مساعدة عملية غير مطلوبة', text: 'قم بمهمة منزلية أو مسؤولية تعلم أنها تُثقل عليها، دون أن تطلب منك ذلك. المبادرة تُظهر الاهتمام أكثر من الاستجابة عند الطلب.', reflect: 'المبادرة تقول: "أراك وأهتم بك" حتى قبل أن تطلبي.' },
+  { title: 'مفاجأة صغيرة', text: 'أحضر لها شيئًا بسيطًا تحبه (حلوى، مشروبها المفضل، زهرة) دون مناسبة. الحجم لا يهم بقدر ما يهم أنه بلا سبب ظاهر.', reflect: 'اللفتات الصغيرة المتكررة تبني الألفة أكثر من المناسبات الكبيرة النادرة.' },
+  { title: 'اعتذار أو مصالحة قديمة', text: 'إن كان هناك أمر عالق بينكما ولو صغيرًا، بادر أنت بفتحه بهدوء واعتذر إن كنت مخطئًا، دون انتظار أن تبدأ هي.', reflect: 'المبادرة بالإصلاح من أرقى صور الرجولة والمسؤولية في العلاقة.' },
+  { title: 'الصبر عند الانزعاج', text: 'إن حدث أي احتكاك بسيط اليوم، تعامل بصبر وهدوء بدل الانفعال. اجعل هذا اليوم مثالًا عمليًا على ضبط النفس من أجلها.', reflect: 'ضبط النفس في اللحظات الصغيرة هو التدريب الحقيقي للحفاظ على البيت.' },
+  { title: 'الدعاء لها', text: 'ادعُ لزوجتك اليوم بظهر الغيب بخير الدنيا والآخرة، وأخبرها لاحقًا أنك فعلت ذلك. الدعاء المُعلَن يزيد الطمأنينة والقرب.', reflect: 'معرفتها أنك تدعو لها من أقوى ما يبني الثقة والسكينة الزوجية.' }
+];
+
+// Offline fallback pool — short, extremely well-known surahs (Juz Amma), chosen
+// specifically to minimize any risk of transcription error. Verify against a
+// trusted Mus-haf/app regardless, as a matter of care with the sacred text.
+const QURAN_OFFLINE_POOL = [
+  { ref: 'سورة الإخلاص', text: 'قُلْ هُوَ اللَّهُ أَحَدٌ * اللَّهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ', reflect: 'سورة الإخلاص خلاصة التوحيد. تذكيرها اليوم: توجّه قلبك بالكامل لله وحده في توبتك، فهو الغني عن الشريك وعن الحاجة، وهو وحده القادر على الغفران.' },
+  { ref: 'سورة العصر', text: 'وَالْعَصْرِ * إِنَّ الْإِنسَانَ لَفِي خُسْرٍ * إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ', reflect: 'الخسارة الحقيقية ليست في الخطأ الماضي، بل في التوقف عن العمل الصالح والصبر. استمرارك اليوم في هذه الخطة هو تطبيق عملي لهذه السورة.' },
+  { ref: 'سورة النصر', text: 'إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ * وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا * فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ إِنَّهُ كَانَ تَوَّابًا', reflect: 'حتى في لحظة النصر والفرح، كان التوجيه بالاستغفار. فالاستغفار ليس فقط عند الذنب، بل ملازم دائم لكل حال — علامة تواضع القلب.' },
+  { ref: 'سورة الفاتحة', text: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ * الرَّحْمَٰنِ الرَّحِيمِ * مَالِكِ يَوْمِ الدِّينِ * إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ * اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ * صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ', reflect: 'في كل صلاة تكررها، تطلب فيها الهداية إلى الصراط المستقيم. اجعل هذا الطلب اليوم واعيًا ومقصودًا، لا مجرد ألفاظ معتادة.' },
+  { ref: 'سورة الكوثر', text: 'إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ * فَصَلِّ لِرَبِّكَ وَانْحَرْ * إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ', reflect: 'العطاء الإلهي يستوجب شكرًا عمليًا: الصلاة والعمل الصالح. فكّر اليوم في النعم التي سترها الله عليك، وقابلها بالطاعة.' },
+  { ref: 'سورة الفلق', text: 'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ * مِن شَرِّ مَا خَلَقَ * وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ * وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ * وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ', reflect: 'الاستعاذة بالله من الشر الداخلي والخارجي جزء من طريق التعافي. اطلب من الله اليوم أن يحميك من العودة لِما تُبت منه.' },
+  { ref: 'سورة الناس', text: 'قُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلَٰهِ النَّاسِ * مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ', reflect: 'الوسوسة بالعودة لليأس أو لخطأ الماضي أمر طبيعي في رحلة التوبة. استعذ بالله منها كلما جاءتك، ولا تدعها تُقعدك عن الاستمرار.' }
+];
+
+// When online, fetch guaranteed-accurate text from a public Quran database
+// (api.alquran.cloud, Uthmani script) instead of relying on generated text —
+// rotating through short passages on the theme of repentance and mercy.
+const QURAN_ONLINE_REFS = [
+  { ref: 'الزمر 39: 53-54', ayat: ['39:53', '39:54'] },
+  { ref: 'هود 11: 114', ayat: ['11:114'] },
+  { ref: 'آل عمران 3: 135-136', ayat: ['3:135', '3:136'] },
+  { ref: 'النساء 4: 110', ayat: ['4:110'] },
+  { ref: 'الفرقان 25: 70-71', ayat: ['25:70', '25:71'] },
+  { ref: 'التحريم 66: 8', ayat: ['66:8'] },
+  { ref: 'البقرة 2: 222', ayat: ['2:222'] }
+];
+
+function dayOfYear() {
+  const d = new Date();
+  const start = new Date(d.getFullYear(), 0, 0);
+  return Math.floor((d - start) / 86400000);
+}
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function loadToday() {
+  const raw = localStorage.getItem('dp_day_' + todayKey());
+  return raw ? JSON.parse(raw) : { t1: false, t2: false, t3: false, t4: false, istighfar: 0, spouseIdx: null, quranRead: null };
+}
+function saveToday(data) {
+  localStorage.setItem('dp_day_' + todayKey(), JSON.stringify(data));
+}
+
+let todayData = loadToday();
+
+function render() {
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  ['t1','t2','t3','t4'].forEach(id => {
+    const btn = document.querySelector(`[data-task="${id}"] .check-btn`);
+    btn.classList.toggle('done', !!todayData[id]);
+  });
+  document.getElementById('istighfarCount').textContent = todayData.istighfar || 0;
+  document.getElementById('istighfarFill').style.width = Math.min(100, todayData.istighfar || 0) + '%';
+  document.getElementById('streakCount').textContent = computeStreak();
+  document.getElementById('istighfarReflection').textContent = ISTIGHFAR_REFLECTIONS[dayOfYear() % ISTIGHFAR_REFLECTIONS.length];
+  document.getElementById('spiritualReflection').textContent = ISTIGHFAR_REFLECTIONS[(dayOfYear() + 3) % ISTIGHFAR_REFLECTIONS.length];
+
+  const gIdx = (todayData.goodDeedIdx !== undefined && todayData.goodDeedIdx !== null) ? todayData.goodDeedIdx : dayOfYear() % GOOD_DEED_POOL.length;
+  const g = GOOD_DEED_POOL[gIdx];
+  document.getElementById('goodDeedText').innerHTML = `<strong>${g.title}</strong><br>${g.text}`;
+
+  const sIdx = (todayData.spouseIdx !== undefined && todayData.spouseIdx !== null) ? todayData.spouseIdx : dayOfYear() % SPOUSE_TASK_POOL.length;
+  const s = SPOUSE_TASK_POOL[sIdx];
+  document.getElementById('spouseTaskText').innerHTML = `<strong>${s.title}</strong>: ${s.text}`;
+  document.getElementById('spouseTaskReflection').textContent = s.reflect;
+
+  const times = JSON.parse(localStorage.getItem('dp_times') || '{}');
+  ['t1', 't2', 't3', 't4'].forEach(id => {
+    if (times[id]) document.getElementById('time_' + id).value = times[id];
+  });
+
+  const journal = localStorage.getItem('dp_journal_' + todayKey());
+  if (journal) document.getElementById('journal').value = journal;
+
+  document.getElementById('quranReadBtn').textContent = todayData.quranRead ? '✓ تم القراءة اليوم' : '✓ قرأت هذا المقطع اليوم';
+  document.getElementById('quranReadBtn').style.opacity = todayData.quranRead ? '0.6' : '1';
+
+  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+  document.getElementById('notifyStatus').textContent =
+    perm === 'granted' ? 'التذكيرات مفعّلة — ستصلك في وقتها طالما الصفحة مفتوحة.' :
+    perm === 'unsupported' ? 'إشعارات النظام غير مدعومة هنا، لكن الصوت والاهتزاز سيعملان.' :
+    'اضغط للسماح بالتذكيرات في وقتها.';
+
+  const isLocalFile = location.protocol === 'file:' || location.protocol === 'content:';
+  document.getElementById('notifyHostWarning').textContent = isLocalFile
+    ? '⚠️ أنت تفتح الملف مباشرة — لهذا التذكيرات لن تعمل بشكل كامل. اقرأ قسم "عن هذا التطبيق" أسفل الصفحة.'
+    : '';
+
+  renderHistory();
+}
+
+function toggleTask(id) {
+  todayData[id] = !todayData[id];
+  saveToday(todayData);
+  render();
+}
+
+function tapIstighfar() {
+  todayData.istighfar = Math.min(100, (todayData.istighfar || 0) + 1);
+  saveToday(todayData);
+  render();
+}
+
+function cycleSpouseTask() {
+  const current = (todayData.spouseIdx !== undefined && todayData.spouseIdx !== null) ? todayData.spouseIdx : dayOfYear() % SPOUSE_TASK_POOL.length;
+  todayData.spouseIdx = (current + 1) % SPOUSE_TASK_POOL.length;
+  saveToday(todayData);
+  render();
+}
+
+function cycleGoodDeed() {
+  const current = (todayData.goodDeedIdx !== undefined && todayData.goodDeedIdx !== null) ? todayData.goodDeedIdx : dayOfYear() % GOOD_DEED_POOL.length;
+  todayData.goodDeedIdx = (current + 1) % GOOD_DEED_POOL.length;
+  saveToday(todayData);
+  render();
+}
+
+function markQuranRead() {
+  todayData.quranRead = document.getElementById('quranRef').textContent || true;
+  todayData.t4 = true;
+  saveToday(todayData);
+  render();
+  showToast('بارك الله فيك — تم تسجيل القراءة.');
+}
+
+// ---------- QURAN PASSAGE (live API when online, verified offline pool otherwise) ----------
+let quranRegenCounter = 0;
+async function loadQuranPassage(manualCycle) {
+  if (manualCycle) quranRegenCounter++;
+  const statusEl = document.getElementById('quranStatus');
+  const idx = (dayOfYear() + quranRegenCounter) % QURAN_ONLINE_REFS.length;
+  const refSet = QURAN_ONLINE_REFS[idx];
+  statusEl.textContent = 'جارِ التحميل من قاعدة بيانات قرآنية موثوقة...';
+  try {
+    const results = await Promise.all(refSet.ayat.map(a =>
+      fetch(`https://api.alquran.cloud/v1/ayah/${a}/quran-uthmani`).then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
+    ));
+    const text = results.map(r => r.data.text).join(' ۝ ');
+    document.getElementById('quranText').textContent = text;
+    document.getElementById('quranRef').textContent = refSet.ref;
+    document.getElementById('quranReflection').textContent = 'تأمل: تدبّر هذا المقطع وكيف يرتبط برحلتك في التوبة والرجوع إلى الله. اقرأه أكثر من مرة إن استطعت.';
+    statusEl.textContent = '✓ تم التحميل من قاعدة بيانات قرآنية موثوقة (نص عثماني).';
+  } catch (e) {
+    const off = QURAN_OFFLINE_POOL[(dayOfYear() + quranRegenCounter) % QURAN_OFFLINE_POOL.length];
+    document.getElementById('quranText').textContent = off.text;
+    document.getElementById('quranRef').textContent = off.ref;
+    document.getElementById('quranReflection').textContent = off.reflect;
+    statusEl.textContent = 'لا يوجد إنترنت — تم عرض سورة من المجموعة المحفوظة مسبقًا (يُنصح بمراجعتها في مصحفك).';
+  }
+}
+
+// ---------- HISTORY LOG (finalizes automatically at midnight rollover) ----------
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('dp_history') || '[]');
+  const el = document.getElementById('historyCard');
+  if (!history.length) { el.innerHTML = '<div class="info-note">لا يوجد سجل بعد — سيبدأ الحفظ التلقائي عند منتصف الليل الأول.</div>'; return; }
+  el.innerHTML = history.slice(-7).reverse().map(h => {
+    const done = ['t1','t2','t3','t4'].filter(k => h[k]).length;
+    return `<div class="history-row">
+      <span class="history-date">${h.date}</span>
+      <span class="history-detail">${done}/4 مهام &middot; استغفار ${h.istighfar || 0} &middot; ${h.quranRead ? '<span class="read-mark">قرآن ✓</span>' : 'قرآن —'}</span>
+    </div>`;
+  }).join('');
+}
+
+let lastKnownDate = localStorage.getItem('dp_lastDate') || todayKey();
+function finalizeDayIfRolledOver() {
+  const nowKey = todayKey();
+  if (nowKey !== lastKnownDate) {
+    const raw = localStorage.getItem('dp_day_' + lastKnownDate);
+    if (raw) {
+      const finished = JSON.parse(raw);
+      finished.date = lastKnownDate;
+      const history = JSON.parse(localStorage.getItem('dp_history') || '[]');
+      history.push(finished);
+      localStorage.setItem('dp_history', JSON.stringify(history.slice(-60)));
+    }
+    lastKnownDate = nowKey;
+    localStorage.setItem('dp_lastDate', nowKey);
+    todayData = loadToday();
+    quranRegenCounter = 0;
+    loadQuranPassage(false);
+  }
+}
+
+function computeStreak() {
+  let streak = 0;
+  const cursor = new Date();
+  cursor.setDate(cursor.getDate() - (allDoneToday() ? 0 : 1));
+  for (let i = 0; i < 365; i++) {
+    const key = cursor.getFullYear() + '-' + String(cursor.getMonth() + 1).padStart(2, '0') + '-' + String(cursor.getDate()).padStart(2, '0');
+    const raw = localStorage.getItem('dp_day_' + key);
+    if (!raw) break;
+    const d = JSON.parse(raw);
+    if (d.t1 && d.t2 && d.t3 && d.t4) { streak++; cursor.setDate(cursor.getDate() - 1); }
+    else break;
+  }
+  return streak;
+}
+function allDoneToday() {
+  return todayData.t1 && todayData.t2 && todayData.t3 && todayData.t4;
+}
+
+function saveTimes() {
+  const times = {};
+  ['t1', 't2', 't3', 't4'].forEach(id => { times[id] = document.getElementById('time_' + id).value; });
+  localStorage.setItem('dp_times', JSON.stringify(times));
+}
+
+function saveJournal() {
+  localStorage.setItem('dp_journal_' + todayKey(), document.getElementById('journal').value);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+async function enableNotifications() {
+  if (!('Notification' in window)) { showToast('إشعارات النظام غير مدعومة، لكن الصوت والاهتزاز سيعملان.'); return; }
+  const perm = await Notification.requestPermission();
+  render();
+  if (perm === 'granted') showToast('تم تفعيل التذكيرات.');
+}
+
+// Plays an audible tone using the Web Audio API (works without any external sound file).
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine'; o.frequency.value = 880; g.gain.value = 0.2;
+    o.start();
+    setTimeout(() => { o.frequency.value = 660; }, 300);
+    setTimeout(() => { o.stop(); ctx.close(); }, 700);
+  } catch (e) { /* ignore — some browsers block audio without a fresh user gesture */ }
+}
+
+function fireLocalAlert(task) {
+  try { if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 400]); } catch (e) {}
+  playBeep();
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification(task.label, { body: task.msg }); } catch (e) {}
+  }
+  showToast('⏰ ' + task.label + ': ' + task.msg);
+}
+
+function testAlert() {
+  fireLocalAlert({ label: 'تجربة', msg: 'هذا شكل التذكير الذي سيصلك — صوت، اهتزاز، وإشعار إن كان مفعّلًا.' });
+}
+
+const TASKS = [
+  { id: 't1', label: 'الخلوة والمناجاة', msg: 'حان وقت الخلوة والمناجاة: الوضوء، ركعتان، والاستغفار.' },
+  { id: 't2', label: 'صلاة الفجر', msg: 'حان وقت صلاة الفجر — ابدأ يومك بصفحة جديدة.' },
+  { id: 't3', label: 'التطبيق العملي للندم', msg: 'تذكير بمهمة اليوم تجاه زوجتك، وإخراج صدقة بسيطة.' },
+  { id: 't4', label: 'غذاء الروح', msg: 'وقت قراءة الورد القرآني اليومي.' }
+];
+
+let firedToday = {};
+function checkReminders() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const nowStr = `${hh}:${mm}`;
+  const times = JSON.parse(localStorage.getItem('dp_times') || '{}');
+  TASKS.forEach(t => {
+    const scheduled = times[t.id] || document.getElementById('time_' + t.id).value;
+    const fireKey = todayKey() + '_' + t.id;
+    if (scheduled === nowStr && !todayData[t.id] && !firedToday[fireKey]) {
+      firedToday[fireKey] = true;
+      fireLocalAlert(t);
+    }
+  });
+}
+
+todayData = loadToday();
+loadQuranPassage(false);
+render();
+setInterval(() => {
+  finalizeDayIfRolledOver();
+  todayData = loadToday();
+  checkReminders();
+  render();
+}, 30000);
+</script>
+
+</body>
+</html>
