@@ -1,0 +1,70 @@
+// Optional: sends one daily reminder email to your inbox — works even if your
+// phone is off or the app is closed, since this runs on Netlify's servers.
+//
+// SETUP (one time):
+// 1. Deploy this "daily-path" folder to Netlify (same way as your other project —
+//    connect the GitHub repo, or drag-and-drop deploy).
+// 2. In Netlify's site settings, add an environment variable RESEND_API_KEY with
+//    your Resend API key (resend.com — free tier is enough for this).
+// 3. Add this to your netlify.toml so it runs automatically every morning
+//    (cron is in UTC; "0 21 * * *" = 21:00 UTC = 5:00 AM in Malaysia/Algeria-adjacent
+//    time zones — adjust to match wherever your phone actually is):
+//
+//    [functions."daily-reminder-email"]
+//      schedule = "0 21 * * *"
+//
+// 4. Redeploy. You can also test it any time by visiting:
+//    https://YOUR-SITE.netlify.app/.netlify/functions/daily-reminder-email
+
+const TO_EMAIL = 'djamel588321@gmail.com';
+const SENDER_EMAIL = 'reminders@your-verified-domain.com'; // must be a domain verified in your Resend account
+
+exports.handler = async () => {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('RESEND_API_KEY is not set.');
+    return { statusCode: 500, body: 'Missing RESEND_API_KEY' };
+  }
+
+  const dateStr = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  const html = `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#1C2B2B;direction:rtl;text-align:right;">
+    <div style="background-color:#0F3D3E;padding:20px 25px;border-radius:6px 6px 0 0;">
+      <div style="color:#C9A24B;font-weight:700;font-size:20px;">🌙 رحلتي اليومية</div>
+      <div style="color:#CBD9D8;font-size:13px;margin-top:3px;">تذكير اليوم &middot; ${dateStr}</div>
+    </div>
+    <div style="padding:20px 15px;line-height:1.9;">
+      <p><strong>🌙 الخلوة والمناجاة (٥:٣٠ صباحًا):</strong> الوضوء، ركعتان، والاستغفار.</p>
+      <p><strong>🕌 صلاة الفجر (٥:٥٠ صباحًا):</strong> ابدأ يومك بصفحة جديدة.</p>
+      <p><strong>☀️ التطبيق العملي للندم (١:٠٠ ظهرًا):</strong> معاملة زوجتك بلطف، وصدقة بسيطة اليوم.</p>
+      <p><strong>📖 غذاء الروح (٨:٠٠ مساءً):</strong> قراءة الورد القرآني اليومي.</p>
+      <p style="color:#7C8C8C;font-size:12px;margin-top:20px;">افتح تطبيق "رحلتي اليومية" لتسجيل ما أنجزته اليوم والحفاظ على تسلسلك.</p>
+    </div>
+  </div>`;
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: `رحلتي اليومية <${SENDER_EMAIL}>`,
+        to: [TO_EMAIL],
+        subject: `🌙 تذكير رحلتك اليومية — ${dateStr}`,
+        html
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      console.error('Resend error:', res.status, data);
+      return { statusCode: 500, body: JSON.stringify(data) };
+    }
+    return { statusCode: 200, body: JSON.stringify({ sent: true, id: data.id || null }) };
+  } catch (err) {
+    console.error('Send failed:', err);
+    return { statusCode: 500, body: String(err) };
+  }
+};
