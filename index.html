@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>رحلتي اليومية</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0F3D3E">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
   :root {
     --teal: #0F3D3E;
@@ -537,6 +540,12 @@ function checkReminders() {
       firedToday[fireKey] = true;
       fireLocalAlert(t);
     }
+  });
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
 
