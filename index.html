@@ -17,6 +17,7 @@
     --text: #1C2B2B;
     --muted: #7C8C8C;
     --good: #2F855A;
+    --bad: #B3453A;
   }
   * { box-sizing: border-box; }
   body {
@@ -24,7 +25,7 @@
     font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
     background: var(--cream);
     color: var(--text);
-    padding-bottom: 40px;
+    padding-bottom: 86px;
   }
   header {
     background: var(--teal);
@@ -83,12 +84,13 @@
   }
   .pill-btn.primary { background: var(--gold); color: var(--teal-dark); }
   .pill-btn.small { padding: 5px 10px; font-size: 11px; }
+  .pill-btn.active { background: var(--teal); color: white; }
   textarea, .prompt-box {
     width: 100%; border: 1px solid #E3E7E7; border-radius: 10px; padding: 10px;
     font-family: inherit; font-size: 13px; color: var(--text); background: #FAFCFC; resize: vertical;
   }
   .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
     background: var(--teal-dark); color: white; padding: 10px 18px; border-radius: 999px;
     font-size: 13px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; max-width: 85%; text-align: center;
   }
@@ -102,6 +104,62 @@
   .history-date { color: var(--teal); font-weight: bold; }
   .history-detail { color: var(--muted); }
   .read-mark { color: var(--good); font-weight: bold; }
+
+  /* ---------- bottom tab nav ---------- */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    background: white; display: flex; border-top: 1px solid #EEE;
+    box-shadow: 0 -2px 12px rgba(15,61,62,0.10);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .nav-btn {
+    flex: 1; background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 9px 2px 8px; font-size: 10.5px; color: var(--muted); font-family: inherit;
+  }
+  .nav-btn .nav-icon { font-size: 19px; line-height: 1; }
+  .nav-btn.active { color: var(--teal); font-weight: bold; }
+
+  /* ---------- duas ---------- */
+  .dua-cat-row { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 10px; }
+  .dua-cat-row::-webkit-scrollbar { display: none; }
+  .dua-card { background: var(--card); border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(15,61,62,0.06); border-right: 4px solid var(--gold); }
+  .dua-occasion { font-weight: bold; font-size: 13.5px; color: var(--teal); margin-bottom: 6px; }
+  .dua-arabic { font-size: 18px; line-height: 2; text-align: center; color: var(--teal-dark); font-family: 'Traditional Arabic', 'Scheherazade New', serif; padding: 6px 2px; }
+  .dua-note { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+  /* ---------- quran plan ---------- */
+  .plan-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .plan-choice { background: #F7F5EC; border: 2px solid transparent; border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; font-weight: bold; color: var(--teal); font-size: 13px; }
+  .plan-choice small { display: block; font-weight: normal; color: var(--muted); font-size: 11px; margin-top: 3px; }
+  .plan-progress-wrap { margin: 10px 0; }
+  .plan-progress-bar { height: 10px; background: #EEE; border-radius: 999px; overflow: hidden; }
+  .plan-progress-fill { height: 100%; background: var(--gold); transition: width .3s; }
+  .plan-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .lib-grid { display: grid; grid-template-columns: 1fr; gap: 0; max-height: 340px; overflow-y: auto; border: 1px solid #F0EEE5; border-radius: 10px; }
+  .lib-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; font-size: 12.5px; border-bottom: 1px solid #F5F3EA; }
+  .lib-row:last-child { border-bottom: none; }
+  .lib-row.done { background: #F2F8F4; color: var(--good); }
+  .lib-row.current { background: #FBF3E2; color: var(--teal-dark); font-weight: bold; }
+  .lib-status { font-size: 13px; }
+
+  /* ---------- quiz ---------- */
+  .quiz-progress { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .quiz-q { font-size: 15px; font-weight: bold; color: var(--teal-dark); line-height: 1.7; margin-bottom: 14px; }
+  .quiz-opt { display: block; width: 100%; text-align: right; background: #F7F5EC; border: 2px solid transparent; border-radius: 10px; padding: 12px; margin-bottom: 8px; font-size: 13.5px; color: var(--text); font-family: inherit; cursor: pointer; }
+  .quiz-opt.correct { background: #E4F3EA; border-color: var(--good); color: var(--good); font-weight: bold; }
+  .quiz-opt.wrong { background: #FBEAE8; border-color: var(--bad); color: var(--bad); font-weight: bold; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-explain { background: #F7F5EC; border-radius: 10px; padding: 10px; font-size: 12.5px; line-height: 1.7; color: #3D4A4A; margin: 8px 0 14px; }
+  .quiz-score-badge { text-align: center; padding: 6px 0 2px; }
+  .quiz-score-num { font-size: 36px; font-weight: bold; color: var(--teal); }
+
+  /* ---------- notif tester ---------- */
+  .diag-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #F5F3EA; }
+  .diag-row:last-child { border-bottom: none; }
+  .diag-val { font-weight: bold; }
+  .diag-ok { color: var(--good); }
+  .diag-bad { color: var(--bad); }
 </style>
 </head>
 <body>
@@ -114,6 +172,9 @@
 
 <div class="container">
 
+  <!-- ============ TAB: HOME ============ -->
+  <div class="tab-section" id="tab-home">
+
   <div class="card" id="notifyCard">
     <div class="task-top">
       <div>
@@ -123,7 +184,23 @@
       <button class="pill-btn primary" onclick="enableNotifications()">تفعيل</button>
     </div>
     <button class="pill-btn small" onclick="testAlert()">🔊 تجربة الصوت والاهتزاز الآن</button>
+    <button class="pill-btn small" onclick="toggleDiagPanel()">🧪 مختبر تشخيص الإشعارات</button>
     <div class="info-note" id="notifyHostWarning"></div>
+
+    <div id="diagPanel" style="display:none; margin-top:10px;">
+      <div class="diag-row"><span>Notification API</span><span class="diag-val" id="diagApi">—</span></div>
+      <div class="diag-row"><span>حالة الإذن الحالية</span><span class="diag-val" id="diagPerm">—</span></div>
+      <div class="diag-row"><span>الاهتزاز (Vibration)</span><span class="diag-val" id="diagVibrate">—</span></div>
+      <div class="diag-row"><span>وضع التشغيل</span><span class="diag-val" id="diagMode">—</span></div>
+      <div class="btn-row">
+        <button class="pill-btn small primary" onclick="testAlert()">🔔 إشعار فوري الآن</button>
+        <button class="pill-btn small" onclick="scheduleDelayedTest()">⏱️ إشعار بعد 15 ثانية</button>
+      </div>
+      <div class="info-note">
+        <strong>مهم:</strong> إن كنت فتحت التطبيق كـ APK (بعد تحويله عبر Appilix أو مشابه)، فالإشعار الذي يظهر هنا هو من نوع "Web Notification" العادي — وبعض تطبيقات الـ WebView لا تعرضه فعليًا كإشعار نظام حقيقي، حتى لو لم يظهر أي خطأ في الكود. إن جربت الزرين أعلاه ولم يظهر أي إشعار حقيقي في شريط الإشعارات:<br><br>
+        الحل الأضمن هو تفعيل <strong>Push Notifications عبر OneSignal</strong> من داخل لوحة تحكم Appilix نفسها (وليس من هذا الكود) — هذه خدمة إشعارات حقيقية تعمل حتى والتطبيق مغلق تمامًا، بعكس الإشعار البرمجي هنا الذي يعمل فقط والصفحة مفتوحة في الخلفية القريبة. افتح إعدادات مشروعك في Appilix وابحث عن قسم Push Notification / OneSignal لتفعيله.
+      </div>
+    </div>
   </div>
 
   <div class="section-title">جدول اليوم</div>
@@ -174,11 +251,12 @@
     <div class="task-top">
       <div>
         <div class="task-title">📖 غذاء الروح</div>
-        <div class="task-desc">قراءة صفحتين من القرآن الكريم (أو الاستماع إليه) — تأخذ 5 دقائق فقط.</div>
+        <div class="task-desc">قراءة ورد اليوم من القرآن الكريم — راجع خطتك الكاملة من تبويب "القرآن" أسفل الشاشة.</div>
       </div>
       <button class="check-btn" onclick="toggleTask('t4')">✓</button>
     </div>
     <input type="time" class="time-input" id="time_t4" value="20:00" onchange="saveTimes()">
+    <button class="pill-btn small" onclick="switchTab('quran')">📖 فتح خطة القراءة الكاملة</button>
   </div>
 
   <div class="section-title">خطتك التفصيلية اليوم</div>
@@ -190,7 +268,7 @@
 
   <div class="card">
     <div class="subhead">
-      <span>📖 الورد القرآني اليوم</span>
+      <span>📖 آية للتأمل اليوم</span>
       <button class="pill-btn small" onclick="loadQuranPassage(true)">🔄 مقطع آخر</button>
     </div>
     <div id="quranStatus" class="info-note">جارِ التحميل...</div>
@@ -222,17 +300,118 @@
 
   <div class="section-title">عن هذا التطبيق</div>
   <div class="card info-note">
-    كل بياناتك تُحفظ على جهازك فقط. خطتك اليومية (الاستغفار، القرآن، العمل الصالح، مهمة الزوج) مبنية بالكامل داخل الكود ولا تحتاج أي تطبيق ذكاء اصطناعي خارجي — فقط الآيات القرآنية تُجلب من قاعدة بيانات قرآنية موثوقة عند توفر الإنترنت لضمان دقتها، وإن لم يتوفر إنترنت يستخدم التطبيق مجموعة سور قصيرة محفوظة مسبقًا.<br><br>
-    <strong>⚠️ لماذا لا تعمل التذكيرات الآن:</strong> أنت تفتح هذا الملف مباشرة من التنزيلات (content://) — والمتصفحات تمنع التذكيرات من الملفات المحلية لأسباب أمنية. لتفعيلها فعليًا:<br><br>
-    <strong>الأسهل:</strong> ارفع هذا الملف على استضافة مجانية (مثل Netlify)، وافتحه من رابط https حقيقي — عندها ستعمل التذكيرات (صوت، اهتزاز، وإشعار) بشكل طبيعي طالما الصفحة مفتوحة.<br><br>
-    <strong>الأقوى (تذكيرات تعمل حتى والتطبيق مغلق تمامًا، أو عبر البريد الإلكتروني):</strong> استخدم <strong>pwabuilder.com</strong> لتحويل الرابط المستضاف إلى APK، أو استخدم ملف دالة البريد الإلكتروني المرفق (Netlify Function) لإرسال تذكير يومي إلى بريدك djamel588321@gmail.com حتى لو كان هاتفك مغلقًا.
+    كل بياناتك تُحفظ على جهازك فقط. خطتك اليومية مبنية بالكامل داخل الكود ولا تحتاج أي تطبيق ذكاء اصطناعي خارجي — فقط الآيات القرآنية تُجلب من قاعدة بيانات قرآنية موثوقة عند توفر الإنترنت لضمان دقتها، وإن لم يتوفر إنترنت يستخدم التطبيق مجموعة سور قصيرة محفوظة مسبقًا للتأمل اليومي (خطة الختمة الكاملة في تبويب القرآن تحتاج إنترنت لجلب النص).
   </div>
 
+  </div>
+  <!-- ============ /TAB: HOME ============ -->
+
+  <!-- ============ TAB: DUAS ============ -->
+  <div class="tab-section" id="tab-duas" style="display:none">
+    <div class="section-title">🤲 أدعية يومك</div>
+    <div class="card info-note">أدعية مأثورة لمناسبات يومك المختلفة — اضغط على تصنيف لعرض أدعيته.</div>
+    <div class="dua-cat-row" id="duaCatRow"></div>
+    <div id="duaList"></div>
+  </div>
+  <!-- ============ /TAB: DUAS ============ -->
+
+  <!-- ============ TAB: QURAN PLAN ============ -->
+  <div class="tab-section" id="tab-quran" style="display:none">
+    <div class="section-title">📖 خطة ختم القرآن</div>
+
+    <div class="card" id="planSetupCard" style="display:none">
+      <div class="task-desc">اختر خلال كم يومًا تريد أن تختم القرآن كاملًا، وسيُقسّم التطبيق الآيات عليك يوميًا تلقائيًا، ويحفظ مكانك بدقة.</div>
+      <div class="plan-choice-grid">
+        <div class="plan-choice" onclick="startPlan(30)">30 يومًا<small>ختمة سريعة</small></div>
+        <div class="plan-choice" onclick="startPlan(60)">60 يومًا<small>وتيرة متوسطة</small></div>
+        <div class="plan-choice" onclick="startPlan(100)">100 يوم<small>وتيرة مريحة</small></div>
+        <div class="plan-choice" onclick="startPlan(365)">سنة كاملة<small>وتيرة خفيفة يوميًا</small></div>
+      </div>
+      <div class="info-note" style="margin-top:10px;">أو حدد عدد الأيام بنفسك:</div>
+      <div class="btn-row">
+        <input type="number" class="time-input" id="customDaysInput" placeholder="مثال: 45" style="flex:1">
+        <button class="pill-btn primary" onclick="startPlanCustom()">ابدأ</button>
+      </div>
+    </div>
+
+    <div id="planActiveWrap" style="display:none">
+      <div class="card">
+        <div class="subhead"><span>وِرد اليوم</span><button class="pill-btn small" onclick="resetPlan()">🔄 إعادة ضبط الخطة</button></div>
+        <div class="plan-progress-wrap">
+          <div class="plan-progress-bar"><div class="plan-progress-fill" id="planProgressFill" style="width:0%"></div></div>
+          <div class="plan-progress-label"><span id="planProgressPct">0%</span><span id="planProgressDays">—</span></div>
+        </div>
+        <div class="info-note" id="planRangeLabel">—</div>
+        <div id="planQuranStatus" class="info-note">جارِ التحميل...</div>
+        <div class="quran-text" id="planQuranText"></div>
+        <div class="btn-row">
+          <button class="pill-btn primary" onclick="completeTodayPortion()" id="planDoneBtn">✓ أنهيت ورد اليوم</button>
+        </div>
+      </div>
+
+      <div class="section-title">مكتبة السور — ما قرأت وما بقي</div>
+      <div class="card">
+        <div class="info-note" style="margin-bottom:8px;">🟢 مكتملة &nbsp; 🟡 قيد القراءة الآن &nbsp; ⚪ لم تصل إليها بعد</div>
+        <div class="lib-grid" id="surahLibrary"></div>
+      </div>
+    </div>
+  </div>
+  <!-- ============ /TAB: QURAN PLAN ============ -->
+
+  <!-- ============ TAB: QUIZ ============ -->
+  <div class="tab-section" id="tab-quiz" style="display:none">
+    <div class="section-title">🧠 اختبر معلوماتك الإسلامية</div>
+
+    <div class="card" id="quizStartCard">
+      <div class="task-desc">10 أسئلة عشوائية عن الأنبياء والمعرفة الإسلامية العامة في كل جولة.</div>
+      <div class="quiz-score-badge">
+        <div class="info-note">أفضل نتيجة لك حتى الآن</div>
+        <div class="quiz-score-num"><span id="bestScoreLabel">0</span> / 10</div>
+      </div>
+      <button class="tap-btn" onclick="startQuiz()">ابدأ جولة جديدة</button>
+    </div>
+
+    <div class="card" id="quizPlayCard" style="display:none">
+      <div class="quiz-progress" id="quizProgress">سؤال 1 / 10</div>
+      <div class="quiz-q" id="quizQuestion"></div>
+      <div id="quizOptions"></div>
+      <div class="quiz-explain" id="quizExplain" style="display:none"></div>
+      <button class="tap-btn" id="quizNextBtn" style="display:none" onclick="nextQuestion()">التالي</button>
+    </div>
+
+    <div class="card" id="quizEndCard" style="display:none">
+      <div class="quiz-score-badge">
+        <div class="quiz-score-num"><span id="finalScore">0</span> / 10</div>
+        <div class="info-note" id="quizEndMsg"></div>
+      </div>
+      <button class="tap-btn" onclick="startQuiz()">العب جولة أخرى</button>
+    </div>
+  </div>
+  <!-- ============ /TAB: QUIZ ============ -->
+
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span>اليوم</span></button>
+  <button class="nav-btn" data-tab="duas" onclick="switchTab('duas')"><span class="nav-icon">🤲</span><span>الأدعية</span></button>
+  <button class="nav-btn" data-tab="quran" onclick="switchTab('quran')"><span class="nav-icon">📖</span><span>القرآن</span></button>
+  <button class="nav-btn" data-tab="quiz" onclick="switchTab('quiz')"><span class="nav-icon">🧠</span><span>اختبر نفسك</span></button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+// ================= TAB SWITCHING =================
+function switchTab(name) {
+  ['home','duas','quran','quiz'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = (t === name) ? '' : 'none';
+  });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  window.scrollTo(0, 0);
+  if (name === 'duas') renderDuas(activeDuaCat);
+  if (name === 'quran') renderQuranPlanTab();
+}
+
 // ---------- BUILT-IN DAILY PLAN CONTENT (no external AI needed) ----------
 const ISTIGHFAR_REFLECTIONS = [
   'الاستغفار المستمر يغسل القلب ويخفف ثقل تأنيب الضمير. كل مرة تقولها بصدق، هي خطوة نحو طمأنينة أكبر — لا تستهن بها مهما تكررت.',
@@ -264,9 +443,6 @@ const SPOUSE_TASK_POOL = [
   { title: 'الدعاء لها', text: 'ادعُ لزوجتك اليوم بظهر الغيب بخير الدنيا والآخرة، وأخبرها لاحقًا أنك فعلت ذلك. الدعاء المُعلَن يزيد الطمأنينة والقرب.', reflect: 'معرفتها أنك تدعو لها من أقوى ما يبني الثقة والسكينة الزوجية.' }
 ];
 
-// Offline fallback pool — short, extremely well-known surahs (Juz Amma), chosen
-// specifically to minimize any risk of transcription error. Verify against a
-// trusted Mus-haf/app regardless, as a matter of care with the sacred text.
 const QURAN_OFFLINE_POOL = [
   { ref: 'سورة الإخلاص', text: 'قُلْ هُوَ اللَّهُ أَحَدٌ * اللَّهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ', reflect: 'سورة الإخلاص خلاصة التوحيد. تذكيرها اليوم: توجّه قلبك بالكامل لله وحده في توبتك، فهو الغني عن الشريك وعن الحاجة، وهو وحده القادر على الغفران.' },
   { ref: 'سورة العصر', text: 'وَالْعَصْرِ * إِنَّ الْإِنسَانَ لَفِي خُسْرٍ * إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ', reflect: 'الخسارة الحقيقية ليست في الخطأ الماضي، بل في التوقف عن العمل الصالح والصبر. استمرارك اليوم في هذه الخطة هو تطبيق عملي لهذه السورة.' },
@@ -277,9 +453,6 @@ const QURAN_OFFLINE_POOL = [
   { ref: 'سورة الناس', text: 'قُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلَٰهِ النَّاسِ * مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ', reflect: 'الوسوسة بالعودة لليأس أو لخطأ الماضي أمر طبيعي في رحلة التوبة. استعذ بالله منها كلما جاءتك، ولا تدعها تُقعدك عن الاستمرار.' }
 ];
 
-// When online, fetch guaranteed-accurate text from a public Quran database
-// (api.alquran.cloud, Uthmani script) instead of relying on generated text —
-// rotating through short passages on the theme of repentance and mercy.
 const QURAN_ONLINE_REFS = [
   { ref: 'الزمر 39: 53-54', ayat: ['39:53', '39:54'] },
   { ref: 'هود 11: 114', ayat: ['11:114'] },
@@ -351,9 +524,10 @@ function render() {
 
   const isLocalFile = location.protocol === 'file:' || location.protocol === 'content:';
   document.getElementById('notifyHostWarning').textContent = isLocalFile
-    ? '⚠️ أنت تفتح الملف مباشرة — لهذا التذكيرات لن تعمل بشكل كامل. اقرأ قسم "عن هذا التطبيق" أسفل الصفحة.'
+    ? '⚠️ أنت تفتح الملف مباشرة — لهذا التذكيرات لن تعمل بشكل كامل.'
     : '';
 
+  updateDiagPanel();
   renderHistory();
 }
 
@@ -391,7 +565,6 @@ function markQuranRead() {
   showToast('بارك الله فيك — تم تسجيل القراءة.');
 }
 
-// ---------- QURAN PASSAGE (live API when online, verified offline pool otherwise) ----------
 let quranRegenCounter = 0;
 async function loadQuranPassage(manualCycle) {
   if (manualCycle) quranRegenCounter++;
@@ -413,11 +586,10 @@ async function loadQuranPassage(manualCycle) {
     document.getElementById('quranText').textContent = off.text;
     document.getElementById('quranRef').textContent = off.ref;
     document.getElementById('quranReflection').textContent = off.reflect;
-    statusEl.textContent = 'لا يوجد إنترنت — تم عرض سورة من المجموعة المحفوظة مسبقًا (يُنصح بمراجعتها في مصحفك).';
+    statusEl.textContent = 'لا يوجد إنترنت — تم عرض سورة من المجموعة المحفوظة مسبقًا.';
   }
 }
 
-// ---------- HISTORY LOG (finalizes automatically at midnight rollover) ----------
 function renderHistory() {
   const history = JSON.parse(localStorage.getItem('dp_history') || '[]');
   const el = document.getElementById('historyCard');
@@ -493,7 +665,6 @@ async function enableNotifications() {
   if (perm === 'granted') showToast('تم تفعيل التذكيرات.');
 }
 
-// Plays an audible tone using the Web Audio API (works without any external sound file).
 function playBeep() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -503,7 +674,7 @@ function playBeep() {
     o.start();
     setTimeout(() => { o.frequency.value = 660; }, 300);
     setTimeout(() => { o.stop(); ctx.close(); }, 700);
-  } catch (e) { /* ignore — some browsers block audio without a fresh user gesture */ }
+  } catch (e) {}
 }
 
 function fireLocalAlert(task) {
@@ -517,6 +688,39 @@ function fireLocalAlert(task) {
 
 function testAlert() {
   fireLocalAlert({ label: 'تجربة', msg: 'هذا شكل التذكير الذي سيصلك — صوت، اهتزاز، وإشعار إن كان مفعّلًا.' });
+}
+
+function scheduleDelayedTest() {
+  showToast('سيصلك إشعار تجريبي خلال 15 ثانية — اخرج من التطبيق الآن لتختبر هل يظهر في الخلفية.');
+  setTimeout(() => {
+    fireLocalAlert({ label: 'تجربة مؤجلة', msg: 'إن رأيت هذا فالإشعار يعمل حتى بعد تصغير الشاشة.' });
+  }, 15000);
+}
+
+function toggleDiagPanel() {
+  const p = document.getElementById('diagPanel');
+  p.style.display = (p.style.display === 'none') ? '' : 'none';
+  updateDiagPanel();
+}
+
+function updateDiagPanel() {
+  const apiEl = document.getElementById('diagApi');
+  const permEl = document.getElementById('diagPerm');
+  const vibEl = document.getElementById('diagVibrate');
+  const modeEl = document.getElementById('diagMode');
+  if (!apiEl) return;
+  const hasApi = 'Notification' in window;
+  apiEl.textContent = hasApi ? 'مدعوم' : 'غير مدعوم';
+  apiEl.className = 'diag-val ' + (hasApi ? 'diag-ok' : 'diag-bad');
+  const perm = hasApi ? Notification.permission : 'unsupported';
+  permEl.textContent = perm === 'granted' ? 'مسموح' : perm === 'denied' ? 'مرفوض' : perm === 'default' ? 'لم يُطلب بعد' : 'غير مدعوم';
+  permEl.className = 'diag-val ' + (perm === 'granted' ? 'diag-ok' : 'diag-bad');
+  const hasVib = 'vibrate' in navigator;
+  vibEl.textContent = hasVib ? 'مدعوم' : 'غير مدعوم';
+  vibEl.className = 'diag-val ' + (hasVib ? 'diag-ok' : 'diag-bad');
+  const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  const isAndroidApp = document.referrer && document.referrer.includes('android-app://');
+  modeEl.textContent = (isStandalone || isAndroidApp) ? 'تطبيق مثبت (APK/PWA)' : 'متصفح عادي';
 }
 
 const TASKS = [
@@ -543,6 +747,297 @@ function checkReminders() {
   });
 }
 
+// ================= DUAS =================
+const DUA_CATEGORIES = [
+  { id: 'morning', label: '🌅 الصباح' },
+  { id: 'evening', label: '🌆 المساء' },
+  { id: 'sleep', label: '🌙 النوم واليقظة' },
+  { id: 'food', label: '🍽️ الطعام' },
+  { id: 'home', label: '🚪 المنزل' },
+  { id: 'masjid', label: '🕌 المسجد' },
+  { id: 'distress', label: '💧 الكرب والهم' },
+  { id: 'forgive', label: '🤲 الاستغفار' },
+  { id: 'family', label: '👨‍👩‍👧 الوالدين' },
+  { id: 'travel', label: '🧳 السفر' }
+];
+
+const DUAS = [
+  { cat: 'morning', occasion: 'دعاء الصباح', arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ', note: 'يُقال بعد صلاة الفجر أو عند بداية اليوم.' },
+  { cat: 'morning', occasion: 'دعاء آخر للصباح', arabic: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ', note: 'من أذكار الصباح الثابتة.' },
+  { cat: 'evening', occasion: 'دعاء المساء', arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ', note: 'يُقال بعد صلاة العصر أو عند دخول المساء.' },
+  { cat: 'sleep', occasion: 'عند النوم', arabic: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا', note: 'يُقال عند الاستلقاء للنوم.' },
+  { cat: 'sleep', occasion: 'عند الاستيقاظ', arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ', note: 'يُقال فور الاستيقاظ من النوم.' },
+  { cat: 'food', occasion: 'قبل الطعام', arabic: 'بِسْمِ اللَّهِ', note: 'وإن نسيت في البداية، قل: بِسْمِ اللَّهِ أَوَّلَهُ وَآخِرَهُ.' },
+  { cat: 'food', occasion: 'بعد الطعام', arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا، وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ', note: 'يُقال بعد الانتهاء من الأكل.' },
+  { cat: 'home', occasion: 'عند دخول المنزل', arabic: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمَخْرَجِ، بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا', note: 'يُقال عند الدخول إلى المنزل.' },
+  { cat: 'home', occasion: 'عند الخروج من المنزل', arabic: 'بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ', note: 'يُقال عند مغادرة المنزل.' },
+  { cat: 'masjid', occasion: 'عند دخول المسجد', arabic: 'اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ', note: 'يُقال مع تقديم الرجل اليمنى عند الدخول.' },
+  { cat: 'masjid', occasion: 'عند الخروج من المسجد', arabic: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ', note: 'يُقال مع تقديم الرجل اليسرى عند الخروج.' },
+  { cat: 'distress', occasion: 'عند الهم والحزن', arabic: 'لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ', note: 'دعاء يونس عليه السلام — يُقال في الشدة والضيق.' },
+  { cat: 'distress', occasion: 'عند الخوف والقلق', arabic: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ', note: 'يُقال عند مواجهة أمر مخيف أو صعب.' },
+  { cat: 'distress', occasion: 'دعاء جامع للهمّ', arabic: 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ', note: 'من أشمل الأدعية للاستعاذة من هموم الحياة اليومية.' },
+  { cat: 'forgive', occasion: 'سيد الاستغفار', arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ', note: 'من قالها موقنًا بها من النهار ومات من يومه دخل الجنة — يُستحب قوله صباحًا ومساءً.' },
+  { cat: 'family', occasion: 'دعاء للوالدين', arabic: 'رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا', note: 'يُقال في أي وقت، خصوصًا بعد الصلوات.' },
+  { cat: 'family', occasion: 'دعاء عام للوالدين والذرية', arabic: 'رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ', note: 'دعاء جامع يشمل الوالدين وسائر المؤمنين.' },
+  { cat: 'travel', occasion: 'دعاء السفر', arabic: 'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنقَلِبُونَ', note: 'يُقال عند ركوب وسيلة النقل للسفر.' }
+];
+
+let activeDuaCat = 'morning';
+function renderDuas(catId) {
+  activeDuaCat = catId;
+  const catRow = document.getElementById('duaCatRow');
+  catRow.innerHTML = DUA_CATEGORIES.map(c =>
+    `<button class="pill-btn small ${c.id === catId ? 'active' : ''}" onclick="renderDuas('${c.id}')">${c.label}</button>`
+  ).join('');
+  const list = document.getElementById('duaList');
+  const items = DUAS.filter(d => d.cat === catId);
+  list.innerHTML = items.map(d => `
+    <div class="dua-card">
+      <div class="dua-occasion">${d.occasion}</div>
+      <div class="dua-arabic">${d.arabic}</div>
+      <div class="dua-note">${d.note}</div>
+    </div>
+  `).join('');
+}
+
+// ================= QURAN READING PLAN (full mus-haf, 114 surahs) =================
+const SURAHS = [
+  ['الفاتحة',7],['البقرة',286],['آل عمران',200],['النساء',176],['المائدة',120],['الأنعام',165],['الأعراف',206],
+  ['الأنفال',75],['التوبة',129],['يونس',109],['هود',123],['يوسف',111],['الرعد',43],['إبراهيم',52],['الحجر',99],
+  ['النحل',128],['الإسراء',111],['الكهف',110],['مريم',98],['طه',135],['الأنبياء',112],['الحج',78],['المؤمنون',118],
+  ['النور',64],['الفرقان',77],['الشعراء',227],['النمل',93],['القصص',88],['العنكبوت',69],['الروم',60],['لقمان',34],
+  ['السجدة',30],['الأحزاب',73],['سبأ',54],['فاطر',45],['يس',83],['الصافات',182],['ص',88],['الزمر',75],['غافر',85],
+  ['فصلت',54],['الشورى',53],['الزخرف',89],['الدخان',59],['الجاثية',37],['الأحقاف',35],['محمد',38],['الفتح',29],
+  ['الحجرات',18],['ق',45],['الذاريات',60],['الطور',49],['النجم',62],['القمر',55],['الرحمن',78],['الواقعة',96],
+  ['الحديد',29],['المجادلة',22],['الحشر',24],['الممتحنة',13],['الصف',14],['الجمعة',11],['المنافقون',11],['التغابن',18],
+  ['الطلاق',12],['التحريم',12],['الملك',30],['القلم',52],['الحاقة',52],['المعارج',44],['نوح',28],['الجن',28],
+  ['المزمل',20],['المدثر',56],['القيامة',40],['الإنسان',31],['المرسلات',50],['النبأ',40],['النازعات',46],['عبس',42],
+  ['التكوير',29],['الانفطار',19],['المطففين',36],['الانشقاق',25],['البروج',22],['الطارق',17],['الأعلى',19],['الغاشية',26],
+  ['الفجر',30],['البلد',20],['الشمس',15],['الليل',21],['الضحى',11],['الشرح',8],['التين',8],['العلق',19],['القدر',5],
+  ['البينة',8],['الزلزلة',8],['العاديات',11],['القارعة',11],['التكاثر',8],['العصر',3],['الهمزة',9],['الفيل',5],
+  ['قريش',4],['الماعون',7],['الكوثر',3],['الكافرون',6],['النصر',3],['المسد',5],['الإخلاص',4],['الفلق',5],['الناس',6]
+];
+const TOTAL_AYAT = SURAHS.reduce((sum, s) => sum + s[1], 0);
+
+function flatToSurahAyah(flatIdx) {
+  let remaining = flatIdx;
+  for (let i = 0; i < SURAHS.length; i++) {
+    if (remaining < SURAHS[i][1]) return { surahNum: i + 1, name: SURAHS[i][0], ayah: remaining + 1 };
+    remaining -= SURAHS[i][1];
+  }
+  return { surahNum: 114, name: SURAHS[113][0], ayah: SURAHS[113][1] };
+}
+
+function loadPlan() {
+  const raw = localStorage.getItem('dp_quranPlan');
+  return raw ? JSON.parse(raw) : null;
+}
+function savePlan(p) { localStorage.setItem('dp_quranPlan', JSON.stringify(p)); }
+
+function startPlan(days) {
+  const dailyAyahs = Math.max(1, Math.ceil(TOTAL_AYAT / days));
+  savePlan({ targetDays: days, dailyAyahs, flatPosition: 0, startDate: todayKey() });
+  renderQuranPlanTab();
+  showToast('بدأت خطتك — ' + dailyAyahs + ' آية يوميًا تقريبًا.');
+}
+function startPlanCustom() {
+  const v = parseInt(document.getElementById('customDaysInput').value, 10);
+  if (!v || v < 1) { showToast('أدخل عددًا صحيحًا من الأيام.'); return; }
+  startPlan(v);
+}
+function resetPlan() {
+  if (!confirm('هل تريد إعادة ضبط خطتك من البداية؟')) return;
+  localStorage.removeItem('dp_quranPlan');
+  renderQuranPlanTab();
+}
+
+async function renderQuranPlanTab() {
+  const plan = loadPlan();
+  document.getElementById('planSetupCard').style.display = plan ? 'none' : '';
+  document.getElementById('planActiveWrap').style.display = plan ? '' : 'none';
+  if (!plan) return;
+
+  const pct = Math.min(100, Math.round((plan.flatPosition / TOTAL_AYAT) * 100));
+  document.getElementById('planProgressFill').style.width = pct + '%';
+  document.getElementById('planProgressPct').textContent = pct + '%';
+  document.getElementById('planProgressDays').textContent = plan.dailyAyahs + ' آية/يوم';
+
+  if (plan.flatPosition >= TOTAL_AYAT) {
+    document.getElementById('planRangeLabel').textContent = '🎉 تهانينا! أتممت ختمة كاملة للقرآن الكريم.';
+    document.getElementById('planQuranText').textContent = '';
+    document.getElementById('planQuranStatus').textContent = 'يمكنك إعادة ضبط الخطة لبدء ختمة جديدة.';
+    document.getElementById('planDoneBtn').style.display = 'none';
+    renderSurahLibrary(plan);
+    return;
+  }
+  document.getElementById('planDoneBtn').style.display = '';
+
+  const fromIdx = plan.flatPosition;
+  const toIdx = Math.min(plan.flatPosition + plan.dailyAyahs - 1, TOTAL_AYAT - 1);
+  const from = flatToSurahAyah(fromIdx);
+  const to = flatToSurahAyah(toIdx);
+  document.getElementById('planRangeLabel').textContent =
+    from.surahNum === to.surahNum
+      ? `اليوم: سورة ${from.name} — من الآية ${from.ayah} إلى الآية ${to.ayah}`
+      : `اليوم: من سورة ${from.name} آية ${from.ayah} إلى سورة ${to.name} آية ${to.ayah}`;
+
+  const statusEl = document.getElementById('planQuranStatus');
+  const textEl = document.getElementById('planQuranText');
+  const total = toIdx - fromIdx + 1;
+  const CAP = 20;
+  statusEl.textContent = 'جارِ تحميل النص...';
+  try {
+    const showCount = Math.min(total, CAP);
+    const refs = [];
+    for (let i = 0; i < showCount; i++) {
+      const sa = flatToSurahAyah(fromIdx + i);
+      refs.push(`${sa.surahNum}:${sa.ayah}`);
+    }
+    const results = await Promise.all(refs.map(r => fetch(`https://api.alquran.cloud/v1/ayah/${r}/quran-uthmani`).then(x => { if (!x.ok) throw new Error('f'); return x.json(); })));
+    let text = results.map(r => r.data.text).join(' ۝ ');
+    if (total > CAP) text += ' … (تابع القراءة في مصحفك حتى نهاية المقطع المحدد أعلاه، الورد طويل لعرضه كاملًا هنا)';
+    textEl.textContent = text;
+    statusEl.textContent = '✓ من قاعدة بيانات قرآنية موثوقة (نص عثماني) — إجمالي ' + total + ' آية اليوم.';
+  } catch (e) {
+    textEl.textContent = '';
+    statusEl.textContent = 'لا يوجد إنترنت — افتح مصحفك على النطاق المحدد أعلاه لقراءة ورد اليوم.';
+  }
+
+  renderSurahLibrary(plan);
+}
+
+function completeTodayPortion() {
+  const plan = loadPlan();
+  if (!plan) return;
+  plan.flatPosition = Math.min(TOTAL_AYAT, plan.flatPosition + plan.dailyAyahs);
+  savePlan(plan);
+  const log = JSON.parse(localStorage.getItem('dp_quranPlanLog') || '[]');
+  log.push({ date: todayKey(), upTo: plan.flatPosition });
+  localStorage.setItem('dp_quranPlanLog', JSON.stringify(log.slice(-200)));
+  todayData.quranRead = todayData.quranRead || 'خطة الختمة';
+  todayData.t4 = true;
+  saveToday(todayData);
+  render();
+  renderQuranPlanTab();
+  showToast(plan.flatPosition >= TOTAL_AYAT ? '🎉 تهانينا على إتمام الختمة!' : 'بارك الله فيك — تم تسجيل ورد اليوم.');
+}
+
+function renderSurahLibrary(plan) {
+  let cursor = 0;
+  const rows = SURAHS.map((s, i) => {
+    const start = cursor;
+    const end = cursor + s[1] - 1;
+    cursor += s[1];
+    let status = 'upcoming', icon = '⚪';
+    if (end < plan.flatPosition) { status = 'done'; icon = '🟢'; }
+    else if (start <= plan.flatPosition && plan.flatPosition <= end) { status = 'current'; icon = '🟡'; }
+    return `<div class="lib-row ${status}"><span>${i + 1}. ${s[0]} <span style="color:var(--muted)">(${s[1]} آية)</span></span><span class="lib-status">${icon}</span></div>`;
+  }).join('');
+  document.getElementById('surahLibrary').innerHTML = rows;
+}
+
+// ================= ISLAMIC KNOWLEDGE QUIZ =================
+const QUIZ_BANK = [
+  { q: 'من هو أول الأنبياء عليهم السلام؟', options: ['نوح', 'آدم', 'إبراهيم', 'إدريس'], correct: 1, explain: 'آدم عليه السلام هو أول الأنبياء وأبو البشرية.' },
+  { q: 'كم عدد الأنبياء المذكورين بالاسم صراحةً في القرآن الكريم؟', options: ['15', '25', '40', '10'], correct: 1, explain: 'ذُكر 25 نبيًا بالاسم صراحة في القرآن الكريم.' },
+  { q: 'كم عدد "أولي العزم" من الرسل؟', options: ['3', '4', '5', '7'], correct: 2, explain: 'أولو العزم خمسة: نوح، إبراهيم، موسى، عيسى، ومحمد ﷺ.' },
+  { q: 'أي نبي التقمه الحوت؟', options: ['يونس', 'يوسف', 'موسى', 'صالح'], correct: 0, explain: 'يونس عليه السلام التقمه الحوت بعد أن ألقى نفسه في البحر.' },
+  { q: 'من هو النبي الذي كلّمه الله تعالى تكليمًا مباشرًا؟', options: ['عيسى', 'موسى', 'داود', 'سليمان'], correct: 1, explain: 'موسى عليه السلام يُلقب بكليم الله.' },
+  { q: 'من هو النبي الذي بنى السفينة بأمر الله؟', options: ['نوح', 'لوط', 'هود', 'إبراهيم'], correct: 0, explain: 'نوح عليه السلام بنى السفينة لإنقاذ من آمن معه من الطوفان.' },
+  { q: 'أي نبي أُعطي كتاب "الزبور"؟', options: ['سليمان', 'داود', 'موسى', 'عيسى'], correct: 1, explain: 'أُنزل الزبور على داود عليه السلام.' },
+  { q: 'من هي أم النبي عيسى عليه السلام؟', options: ['آسية', 'مريم', 'خديجة', 'حواء'], correct: 1, explain: 'مريم عليها السلام، وسُميت سورة كاملة باسمها.' },
+  { q: 'كم عدد أركان الإسلام؟', options: ['4', '5', '6', '7'], correct: 1, explain: 'أركان الإسلام خمسة: الشهادتان، الصلاة، الزكاة، الصوم، الحج.' },
+  { q: 'كم عدد أركان الإيمان؟', options: ['5', '6', '7', '4'], correct: 1, explain: 'أركان الإيمان ستة: الإيمان بالله، ملائكته، كتبه، رسله، اليوم الآخر، والقدر خيره وشره.' },
+  { q: 'من هو أول خليفة للمسلمين بعد وفاة النبي ﷺ؟', options: ['عمر بن الخطاب', 'أبو بكر الصديق', 'عثمان بن عفان', 'علي بن أبي طالب'], correct: 1, explain: 'أبو بكر الصديق رضي الله عنه أول الخلفاء الراشدين.' },
+  { q: 'ما اسم أول مسجد بُني في الإسلام؟', options: ['المسجد الأقصى', 'مسجد قباء', 'المسجد النبوي', 'المسجد الحرام'], correct: 1, explain: 'مسجد قباء بناه النبي ﷺ عند وصوله للمدينة قبل دخولها.' },
+  { q: 'في أي مدينة وُلد النبي محمد ﷺ؟', options: ['المدينة المنورة', 'مكة المكرمة', 'الطائف', 'القدس'], correct: 1, explain: 'وُلد النبي ﷺ في مكة المكرمة.' },
+  { q: 'إلى أي مدينة كانت هجرة النبي ﷺ؟', options: ['الطائف', 'دمشق', 'المدينة المنورة', 'بغداد'], correct: 2, explain: 'هاجر النبي ﷺ من مكة إلى المدينة المنورة (يثرب سابقًا).' },
+  { q: 'من هو أول مؤذن في الإسلام؟', options: ['بلال بن رباح', 'عبدالله بن زيد', 'أبو محذورة', 'عمار بن ياسر'], correct: 0, explain: 'بلال بن رباح رضي الله عنه كان مؤذن النبي ﷺ.' },
+  { q: 'ما اسم الرحلة الليلية للنبي ﷺ من مكة إلى المسجد الأقصى؟', options: ['الهجرة', 'الإسراء', 'الفتح', 'الغزوة'], correct: 1, explain: 'الإسراء، وتبعه المعراج إلى السماء.' },
+  { q: 'كم عدد سور القرآن الكريم؟', options: ['100', '114', '120', '99'], correct: 1, explain: 'القرآن الكريم يحتوي على 114 سورة.' },
+  { q: 'ما هي أطول سورة في القرآن الكريم؟', options: ['آل عمران', 'النساء', 'البقرة', 'الأعراف'], correct: 2, explain: 'سورة البقرة هي أطول سور القرآن الكريم بـ 286 آية.' },
+  { q: 'ما هي أقصر سورة في القرآن الكريم؟', options: ['الإخلاص', 'الكوثر', 'العصر', 'الناس'], correct: 1, explain: 'سورة الكوثر أقصر سور القرآن، وعدد آياتها 3.' },
+  { q: 'أي نبي فهّمه الله منطق الطير والنمل؟', options: ['داود', 'سليمان', 'يوسف', 'زكريا'], correct: 1, explain: 'سليمان عليه السلام، كما ورد في سورة النمل.' },
+  { q: 'أي نبي رأى في المنام أنه يذبح ابنه، فكان ذلك ابتلاءً؟', options: ['نوح', 'يعقوب', 'إبراهيم', 'زكريا'], correct: 2, explain: 'إبراهيم عليه السلام، والابن هو إسماعيل عليه السلام في المشهور عند المسلمين.' },
+  { q: 'أي نبي أُلقي في النار فلم تحرقه بأمر الله؟', options: ['موسى', 'إبراهيم', 'لوط', 'هود'], correct: 1, explain: 'إبراهيم عليه السلام، إذ قال الله للنار: "كوني بردًا وسلامًا على إبراهيم".' },
+  { q: 'أي نبي ألقاه إخوته في البئر؟', options: ['يوسف', 'يونس', 'موسى', 'إسماعيل'], correct: 0, explain: 'يوسف عليه السلام، وله سورة كاملة تحمل قصته.' },
+  { q: 'أي نبي عُرف بصبره الشديد حتى ضُرب به المثل؟', options: ['أيوب', 'يعقوب', 'زكريا', 'شعيب'], correct: 0, explain: 'أيوب عليه السلام ابتُلي بالمرض والفقر فصبر، ويُضرب به المثل في الصبر.' }
+];
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quizSet = [], quizIndex = 0, quizScore = 0;
+
+function startQuiz() {
+  quizSet = shuffleArray(QUIZ_BANK).slice(0, 10);
+  quizIndex = 0; quizScore = 0;
+  document.getElementById('quizStartCard').style.display = 'none';
+  document.getElementById('quizEndCard').style.display = 'none';
+  document.getElementById('quizPlayCard').style.display = '';
+  showQuestion();
+}
+
+function showQuestion() {
+  const item = quizSet[quizIndex];
+  document.getElementById('quizProgress').textContent = `سؤال ${quizIndex + 1} / ${quizSet.length}`;
+  document.getElementById('quizQuestion').textContent = item.q;
+  document.getElementById('quizExplain').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+  const optWrap = document.getElementById('quizOptions');
+  optWrap.innerHTML = '';
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i);
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(i) {
+  const item = quizSet[quizIndex];
+  const buttons = document.querySelectorAll('#quizOptions .quiz-opt');
+  buttons.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === item.correct) b.classList.add('correct');
+    else if (idx === i && i !== item.correct) b.classList.add('wrong');
+  });
+  if (i === item.correct) quizScore++;
+  const ex = document.getElementById('quizExplain');
+  ex.textContent = item.explain;
+  ex.style.display = '';
+  document.getElementById('quizNextBtn').style.display = '';
+  document.getElementById('quizNextBtn').textContent = (quizIndex === quizSet.length - 1) ? 'عرض النتيجة' : 'التالي';
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex >= quizSet.length) { endQuiz(); return; }
+  showQuestion();
+}
+
+function endQuiz() {
+  document.getElementById('quizPlayCard').style.display = 'none';
+  document.getElementById('quizEndCard').style.display = '';
+  document.getElementById('finalScore').textContent = quizScore;
+  const best = parseInt(localStorage.getItem('dp_quizBest') || '0', 10);
+  if (quizScore > best) { localStorage.setItem('dp_quizBest', String(quizScore)); }
+  document.getElementById('quizEndMsg').textContent =
+    quizScore >= 9 ? 'ممتاز! معلومات إسلامية رائعة 🌟' :
+    quizScore >= 6 ? 'جيد جدًا! استمر في التعلم 👍' :
+    'لا بأس، كل جولة فرصة لتتعلم أكثر 🌱';
+}
+
+document.getElementById('bestScoreLabel').textContent = localStorage.getItem('dp_quizBest') || '0';
+
+// ================= INIT =================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
@@ -552,6 +1047,7 @@ if ('serviceWorker' in navigator) {
 todayData = loadToday();
 loadQuranPassage(false);
 render();
+renderDuas('morning');
 setInterval(() => {
   finalizeDayIfRolledOver();
   todayData = loadToday();
