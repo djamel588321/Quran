@@ -1,7 +1,9 @@
-// Minimal service worker: caches the app shell so it installs as a real PWA
-// and still opens (with the offline Quran fallback pool) with no internet.
-const CACHE_NAME = 'rihlati-v1';
-const APP_SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
+// Service worker v2: the page itself (index.html) is now NETWORK-FIRST, so
+// every future update you upload shows immediately on next load. Only the
+// static assets (icons, manifest) stay cache-first for offline speed.
+// Bumping CACHE_NAME here also forces old cached copies to be thrown away.
+const CACHE_NAME = 'rihlati-v2';
+const APP_SHELL = ['./manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -20,16 +22,22 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // App shell: cache-first. Everything else (like the live Quran API calls):
-  // network-first, falling back to cache if offline.
-  const isAppShell = APP_SHELL.some((p) => event.request.url.endsWith(p.replace('./', '')));
-  if (isAppShell) {
+  const req = event.request;
+  const isHTMLPage = req.mode === 'navigate' || req.url.endsWith('.html') || req.url.endsWith('/');
+
+  if (isHTMLPage) {
+    // Network-first: always try to get the freshest page; only use cache if offline.
     event.respondWith(
-      caches.match(event.request).then((cached) => cached || fetch(event.request))
+      fetch(req).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+        return res;
+      }).catch(() => caches.match(req))
     );
   } else {
+    // Static assets: cache-first for speed, network fallback.
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
+      caches.match(req).then((cached) => cached || fetch(req))
     );
   }
 });
